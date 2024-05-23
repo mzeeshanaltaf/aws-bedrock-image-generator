@@ -1,1 +1,28 @@
-# aws-bedrock-image-generator
+# Image Generator using AWS Bedrock
+An Image Generator powered by AWS Bedrock and developed using Streamlit
+
+# Application Link
+https://aws-bedrock-image-generator.streamlit.app/
+
+# Supported Models
+This application supports the following models from AWS Bedrock:
+* Amazon:
+  * Titan Image Generator G1
+
+# System Requirements
+You must have Python 3.9 or later installed. Earlier versions of python may not compile.
+
+# Installation
+1.  Clone this repository
+2. Create a virtual environment
+3. Install the necessary python packages:
+
+   `pip install -r requirements.txt`
+5. Run the application with following command from terminal:
+
+   `streamlit run main.py`
+
+# Screen Shots
+![image](https://github.com/mzeeshanaltaf/aws-bedrock-image-generator/assets/154883001/413b7c5c-8c48-47fa-80c9-c9b1cf1a104e)
+
+
