@@ -16,15 +16,17 @@ model_provider, model_id = configure_sidebar_for_model_selection()
 st.sidebar.divider()
 
 st.sidebar.header('Image Configuration')
-image_quality, orientation, image_size = configure_sidebar_for_image_configuration()
+image_quality, orientation, image_size, num_of_images = configure_sidebar_for_image_configuration()
 
 st.subheader("Enter the Image Description")
 prompt = st.text_input('Enter the Image Description', placeholder='Enter the Image Description',
                        disabled=not app_unlocked, label_visibility="collapsed")
-generate = st.button('Generate Image', type='primary', disabled=not prompt)
+generate = st.button('Generate Image(s)', type='primary', disabled=not prompt)
 if generate:
-
+    st.subheader('Generated Image(s):')
     with st.spinner('Processing...'):
         model_response = invoke_llm_model(prompt, model_provider, model_id, secret_key, image_quality, orientation,
-                                          image_size)
-        st.image(model_response)
+                                          image_size, num_of_images)
+        cols = st.columns(num_of_images)
+        for index, col in enumerate(cols):
+            col.image(model_response[index])

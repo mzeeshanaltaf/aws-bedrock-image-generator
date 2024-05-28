@@ -14,8 +14,8 @@ def configure_sidebar_for_image_configuration():
     image_quality = st.sidebar.selectbox("Select the Image Quality", ('Standard', 'Premium'))
     orientation = st.sidebar.radio('Select the Orientation', ['Portrait', 'Landscape'])
     image_size = st.sidebar.selectbox("Select the Image Size", ('512 x 512', '1024 x 1024'))
-    # num_of_images = st.sidebar.slider('Enter the Number of Images', 1, 5, 1)
-    return image_quality, orientation, image_size
+    num_of_images = st.sidebar.slider('Number of Images to Generate', 1, 5, 1)
+    return image_quality, orientation, image_size, num_of_images
 
 
 # Function to configure sidebar to get the secret access key
@@ -44,13 +44,13 @@ def configure_sidebar_for_model_selection():
 
 # Function to configure model payload as per given model provider. Each model provider has different ways to
 # configure payload
-def get_model_payload(model_provider, prompt_data, image_quality, orientation, image_size):
+def get_model_payload(model_provider, prompt_data, image_quality, orientation, image_size, num_of_images):
     image_height = int(image_size.split('x')[0].strip())
     image_width = int(image_size.split('x')[0].strip())
     if model_provider == 'Amazon':
         text_to_image_params = {"text": prompt_data}
         imageGenerationConfig = {"cfgScale": 8, "seed": 0, "quality": image_quality.lower(), "width": image_width,
-                                 "height": image_height, "numberOfImages": 1}
+                                 "height": image_height, "numberOfImages": num_of_images}
         return {
             "textToImageParams": text_to_image_params,
             "taskType": "TEXT_IMAGE",
@@ -59,20 +59,23 @@ def get_model_payload(model_provider, prompt_data, image_quality, orientation, i
 
 
 # Function to get model response based on model provider.
-def get_model_response(model_provider, response_body):
+def get_model_response(model_provider, response_body, num_of_images):
+    image_bytes = []
     if model_provider == 'Amazon':
-        image_encoded = response_body.get("images")[0].encode("utf-8")
-        image_bytes = base64.b64decode(image_encoded)
+        for i in range(num_of_images):
+            image_encoded = response_body.get("images")[i].encode("utf-8")
+            image_bytes.append(base64.b64decode(image_encoded))
         return image_bytes
 
 
 # Function to invoke LLM
-def invoke_llm_model(prompt_data, model_provider, model_id, secret_key, image_quality, orientation, image_size):
+def invoke_llm_model(prompt_data, model_provider, model_id, secret_key, image_quality, orientation, image_size,
+                     num_of_images):
     bedrock = boto3.client(service_name='bedrock-runtime',
                            aws_access_key_id='AKIAYS2NUCSXLJLV3AG6',
                            aws_secret_access_key=secret_key,
                            region_name='ap-south-1')
-    payload = get_model_payload(model_provider, prompt_data, image_quality, orientation, image_size)
+    payload = get_model_payload(model_provider, prompt_data, image_quality, orientation, image_size, num_of_images)
     body = json.dumps(payload)
     response = bedrock.invoke_model(
         body=body,
@@ -81,5 +84,5 @@ def invoke_llm_model(prompt_data, model_provider, model_id, secret_key, image_qu
         accept="application/json"
     )
     response_body = json.loads(response.get("body").read())
-    image_bytes = get_model_response(model_provider, response_body)
+    image_bytes = get_model_response(model_provider, response_body, num_of_images)
     return image_bytes
