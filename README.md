@@ -26,6 +26,8 @@ You must have Python 3.9 or later installed. Earlier versions of python may not 
    `streamlit run main.py`
 
 # Screen Shots
-![image](https://github.com/mzeeshanaltaf/aws-bedrock-image-generator/assets/154883001/413b7c5c-8c48-47fa-80c9-c9b1cf1a104e)
+![image](https://github.com/mzeeshanaltaf/aws-bedrock-image-generator/assets/154883001/74956e0e-33e6-485a-b5fb-70a01ad97655)
+
+
 
 
