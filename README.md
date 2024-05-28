@@ -1,5 +1,8 @@
 # Image Generator using AWS Bedrock
-An Image Generator powered by AWS Bedrock and developed using Streamlit
+An Image Generator powered by AWS Bedrock and developed using Streamlit. It has following functionalities:
+* Option to select image quality
+* Generate image(s) of different sizes
+* Generate multiple images
 
 # Application Link
 https://aws-bedrock-image-generator.streamlit.app/
